@@ -1,7 +1,7 @@
 /* ===========================
    Config / Globals
    =========================== */
-const API_KEY = "d1f39f7b57bf45b6b01156979ec08961"; // <-- Replace
+
 const BASE_URL = "https://newsapi.org/v2/everything";
 
 const categories = [

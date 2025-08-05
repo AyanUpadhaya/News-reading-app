@@ -31,7 +31,3 @@ A responsive news reading web app built with **HTML**, **CSS**, **JavaScript**, 
 
 
 
-## 🚀 Demo
-You can run it locally or deploy it on any static hosting service like **Vercel**, **Netlify**, or **GitHub Pages**.
-
-## 📂 Project Structure

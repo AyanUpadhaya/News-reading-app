@@ -1,0 +1,121 @@
+/* Theme variables based on data-theme attribute */
+:root {
+    --bg: #ffffff;
+    --text: #212529;
+    --card-bg: #ffffff;
+    --card-text: #212529;
+    --muted: #6c757d;
+    --nav-bg: #0d6efd;
+    --nav-text: #ffffff;
+    --btn-outline: rgba(0, 0, 0, 0.1);
+    --badge-bg: #6c757d;
+}
+
+/* Dark theme variables */
+[data-theme="dark"] {
+    --bg: #0b0f14;
+    --text: #e6eef6;
+    --card-bg: #0f1620;
+    --card-text: #e6eef6;
+    --muted: #9aa6b2;
+    --nav-bg: #07102a;
+    --nav-text: #e6eef6;
+    --btn-outline: rgba(255, 255, 255, 0.08);
+    --badge-bg: #495057;
+}
+
+html,
+body {
+    height: 100%;
+    background-color: var(--bg);
+    color: var(--text);
+    scroll-behavior: smooth;
+    /* smooth scrolling */
+}
+
+/* Navbar */
+#mainNavbar {
+    background-color: var(--nav-bg) !important;
+    color: var(--nav-text);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+#mainNavbar .navbar-brand {
+    color: var(--nav-text) !important;
+    font-weight: 600;
+}
+
+#mainNavbar input,
+#mainNavbar .btn {
+    color: var(--nav-text);
+    background: transparent;
+}
+
+/* Badge look adjusted for theme */
+#savedCountBadge {
+    background: var(--badge-bg);
+    color: var(--nav-text);
+    margin-left: 6px;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg);
+    color: var(--card-text);
+}
+
+.card-img-top {
+    aspect-ratio: 16 / 9;
+    /* or 1 / 1 for square */
+    width: 100%;
+    object-fit: cover;
+}
+.card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+/* Categories buttons */
+#categories button {
+    text-transform: uppercase;
+}
+
+/* Loader center space */
+#loader {
+    min-height: 80px;
+}
+
+/* Floating scroll to top button */
+#scrollTopBtn {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    display: none;
+    /* initial hidden; JS toggles to 'flex' */
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: var(--nav-bg);
+    color: var(--nav-text);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Save button small spacing */
+.card .btn-save {
+    margin-right: .5rem;
+}
+
+/* small utility for truncated description */
+.text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

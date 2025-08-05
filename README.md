@@ -2,6 +2,9 @@
 
 A responsive news reading web app built with **HTML**, **CSS**, **JavaScript**, and **Bootstrap** that fetches live news articles from [NewsAPI](https://newsapi.org/).
 
+## 📌 Live link
+https://global-newsapp.netlify.app/
+
 ## 📌 Features
 
 - **Predefined Categories**  

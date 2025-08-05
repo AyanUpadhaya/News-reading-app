@@ -119,3 +119,16 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* Status placeholders */
+#statusPlaceholder .alert,
+#statusPlaceholder .card {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Make retry/home buttons visible in dark mode too */
+[data-theme="dark"] #statusPlaceholder .btn-outline-light {
+  color: var(--nav-text);
+  border-color: var(--btn-outline);
+}

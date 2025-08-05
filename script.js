@@ -46,6 +46,90 @@ const modalLink = document.getElementById("newsOriginalLink");
 
 const toggleThemeBtn = document.getElementById("toggleTheme");
 const scrollTopBtn = document.getElementById("scrollTopBtn");
+/* ---- Status placeholders elements ---- */
+const statusPlaceholder = document.getElementById("statusPlaceholder");
+const serviceError = document.getElementById("serviceError");
+const dataMissing = document.getElementById("dataMissing");
+const noNews = document.getElementById("noNews");
+
+const retryBtn = document.getElementById("retryBtn");
+const homeFromErrorBtn = document.getElementById("homeFromErrorBtn");
+const retryFromMissing = document.getElementById("retryFromMissing");
+const goHomeBtn = document.getElementById("goHomeBtn");
+const clearSearchBtn = document.getElementById("clearSearchBtn");
+
+/* ---- Show / hide helpers ---- */
+function hideAllStatus() {
+  serviceError.classList.add("d-none");
+  dataMissing.classList.add("d-none");
+  noNews.classList.add("d-none");
+  // ensure news container visible state is handled separately
+}
+
+function showServiceUnavailable() {
+  // hide article list and show error
+  newsContainer.innerHTML = "";
+  hideAllStatus();
+  serviceError.classList.remove("d-none");
+  newsContainer.classList.add("d-none");
+}
+
+function showDataMissing() {
+  newsContainer.innerHTML = "";
+  hideAllStatus();
+  dataMissing.classList.remove("d-none");
+  newsContainer.classList.add("d-none");
+}
+
+function showNoNewsFound() {
+  newsContainer.innerHTML = "";
+  hideAllStatus();
+  noNews.classList.remove("d-none");
+  newsContainer.classList.add("d-none");
+}
+
+function clearStatusAndShowNews() {
+  hideAllStatus();
+  newsContainer.classList.remove("d-none");
+}
+
+/* ---- Event wiring ---- */
+retryBtn?.addEventListener("click", () => {
+  clearStatusAndShowNews();
+  // try fetching current query again (page reset optional)
+  page = 1;
+  fetchNews(currentQuery);
+});
+
+retryFromMissing?.addEventListener("click", () => {
+  clearStatusAndShowNews();
+  page = 1;
+  fetchNews(currentQuery);
+});
+
+homeFromErrorBtn?.addEventListener("click", () => {
+  clearStatusAndShowNews();
+  isSavedView = false;
+  currentQuery = "technology";
+  page = 1;
+  fetchNews(currentQuery);
+});
+
+goHomeBtn?.addEventListener("click", () => {
+  clearStatusAndShowNews();
+  isSavedView = false;
+  currentQuery = "technology";
+  page = 1;
+  fetchNews(currentQuery);
+});
+
+clearSearchBtn?.addEventListener("click", () => {
+  searchInput.value = "";
+  clearStatusAndShowNews();
+  currentQuery = "technology";
+  page = 1;
+  fetchNews(currentQuery);
+});
 
 const SAVED_KEY = "savedArticles_v1";
 
@@ -143,38 +227,54 @@ async function fetchNews(query, append = false) {
   if (isLoading) return;
   isLoading = true;
   toggleLoader(true);
+  // hide any status UI while loading
+  hideAllStatus();
 
-  const pageSize = 9;
-  const url = `/.netlify/functions/news?q=${encodeURIComponent(
-    query
-  )}&page=${page}`;
   try {
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data.status !== "ok") {
-      console.error("API error:", data);
-      if (!append)
-        newsContainer.innerHTML =
-          '<p class="text-danger">Failed to fetch news.</p>';
+    const res = await fetch(
+      `/.netlify/functions/news?q=${encodeURIComponent(query)}&page=${page}`
+    );
+    if (!res.ok) {
+      // network-level error (e.g. 502/504)
+      showServiceUnavailable();
       return;
     }
 
-    if (data.articles && data.articles.length) {
-      displayArticles(data.articles, append);
-    } else if (!append) {
-      newsContainer.innerHTML = `<p class="text-muted">No news found for "${query}".</p>`;
+    const data = await res.json();
+
+    // handle API-level errors or malformed responses
+    if (!data || typeof data !== "object") {
+      showDataMissing();
+      return;
     }
+
+    if (data.status && data.status !== "ok") {
+      // API reported an error (e.g. rate limit or other)
+      // show a friendly message, could also show data.message
+      console.error("API error:", data);
+      showServiceUnavailable();
+      return;
+    }
+
+    // now we have a valid response object
+    if (!data.articles || data.articles.length === 0) {
+      showNoNewsFound();
+      return;
+    }
+
+    // successful: show articles
+    displayArticles(data.articles, append);
+    clearStatusAndShowNews();
   } catch (err) {
-    console.error(err);
-    if (!append)
-      newsContainer.innerHTML =
-        '<p class="text-danger">Something went wrong.</p>';
+    console.error("Fetch failed:", err);
+    // network or unexpected exception
+    showServiceUnavailable();
   } finally {
     isLoading = false;
     toggleLoader(false);
   }
 }
+
 
 function handleScrollInfinite() {
   if (isSavedView) return; // don't infinite-load in saved view

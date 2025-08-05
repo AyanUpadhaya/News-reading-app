@@ -145,10 +145,9 @@ async function fetchNews(query, append = false) {
   toggleLoader(true);
 
   const pageSize = 9;
-  const url = `${BASE_URL}?q=${encodeURIComponent(
+  const url = `/.netlify/functions/news?q=${encodeURIComponent(
     query
-  )}&page=${page}&pageSize=${pageSize}&sortBy=publishedAt&language=en&apiKey=${API_KEY}`;
-
+  )}&page=${page}`;
   try {
     const res = await fetch(url);
     const data = await res.json();
